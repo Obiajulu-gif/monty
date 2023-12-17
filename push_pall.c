@@ -1,30 +1,22 @@
 #include "monty.h"
 
-
-/**
- * push - Pushes an element to the stack.
- * @stack: The stack.
- * @value: The value to push.
- */
-void push(Stack *stack, int value)
+int stack[STACK_SIZE];
+int top = -1;
+void push(int value)
 {
-if (stack->top == STACK_SIZE)
-{
-fprintf(stderr, "Stack overflow\n");
-exit(EXIT_FAILURE);
-}
-stack->stack[stack->top++] = value;
+    if (top == STACK_SIZE - 1)
+    {
+        fprintf(stderr, "Stack Overflow\n");
+        exit(EXIT_FAILURE);
+    }
+    stack[++top] = value;
 }
 
-/**
- * pall - Prints all the values on the stack, starting from the top.
- * @stack: The stack.
- */
-void pall(Stack *stack)
+void pall()
 {
-int i;
-for (i = stack->top - 1; i >= 0; i--)
-{
-printf("%d\n", stack->stack[i]);
-}
+    int i;
+    for (i = top; i >= 0; i--)
+    {
+        printf("%d\n", stack[i]);
+    }
 }

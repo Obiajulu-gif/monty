@@ -2,8 +2,9 @@
 #define MONTY_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define STACK_SIZE 100
+#define STACK_SIZE 1000
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -40,7 +41,7 @@ typedef struct {
     int top;
 } Stack;
 
-void push(Stack *stack, int value);
-void pall(Stack *stack);
+void push(int value);
+void pall();
 
 #endif /* MONTY_H */
