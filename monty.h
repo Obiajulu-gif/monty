@@ -5,6 +5,8 @@
 #include <string.h>
 
 #define STACK_SIZE 1000
+int stack[STACK_SIZE];
+int top = -1;
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -42,6 +44,6 @@ typedef struct {
 } Stack;
 
 void push(int value);
-void pall();
+void pall(void);
 
 #endif /* MONTY_H */
