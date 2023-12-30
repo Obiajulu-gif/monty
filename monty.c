@@ -1,43 +1,52 @@
-#include  "monty.h"
+#include "monty.h"
+
 int main(int argc, char *argv[])
 {
-FILE *file;
-char opcode[100];
-int arg;
-int line_number = 1;
-if (argc != 2)
-{
-fprintf(stderr, "Usage: %s file\n", argv[0]);
-return (EXIT_FAILURE);
-}
-file = fopen(argv[1], "r");
-if (file == NULL)
-{
-fprintf(stderr, "Error opening file\n");
-return (EXIT_FAILURE);
-}
-while (fscanf(file, "%s", opcode) != EOF)
-{
-if (strcmp(opcode, "push") == 0)
-{
-if (fscanf(file, "%d", &arg) != 1)
-{
-fprintf(stderr, "L%d: usage: push integer\n", line_number);
-return (EXIT_FAILURE);
-}
-push(arg);
-}
-else if (strcmp(opcode, "pall") == 0)
-{
-pall();
-}
-else
-{
-fprintf(stderr, "L%d: Unknown opcode: %s\n", line_number, opcode);
-return (EXIT_FAILURE);
-}
-line_number++;
-}
-fclose(file);
-return (EXIT_SUCCESS);
+    FILE *file;
+    stack_t *stack = NULL;
+    char opcode[100];
+    int value;
+    unsigned int line_number = 0;
+    /*     // Check for valid number of arguments
+     */
+    if (argc != 2)
+    {
+        fprintf(stderr, "USAGE: monty file\n");
+        return EXIT_FAILURE;
+    }
+
+    file = fopen(argv[1], "r");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+        return EXIT_FAILURE;
+    }
+
+    stack = NULL;
+   
+
+/*     // Read and interpret the bytecode file line by line
+ */    while (fgets(opcode, sizeof(opcode), file) != NULL)
+    {
+        line_number++;
+
+/*         // Parse opcode and value (if any)
+ */        if (sscanf(opcode, "push %d", &value) == 1)
+        {
+            push(&stack, value);
+        }
+        else if (strcmp(opcode, "pall\n") == 0)
+        {
+            pall(&stack);
+        }
+        else
+        {
+            fprintf(stderr, "L%d: unknown instruction %s", line_number, opcode);
+            return EXIT_FAILURE;
+        }
+    }
+
+    fclose(file);
+
+    return EXIT_SUCCESS;
 }

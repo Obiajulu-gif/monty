@@ -5,8 +5,7 @@
 #include <string.h>
 
 #define STACK_SIZE 1000
-int stack[STACK_SIZE];
-int top = -1;
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -22,7 +21,6 @@ typedef struct stack_s
     struct stack_s *prev;
     struct stack_s *next;
 } stack_t;
-
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
@@ -37,13 +35,7 @@ typedef struct instruction_s
     void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-
-typedef struct {
-    int stack[STACK_SIZE];
-    int top;
-} Stack;
-
-void push(int value);
-void pall(void);
+void push(stack_t **stack, int value);
+void pall(stack_t **stack);
 
 #endif /* MONTY_H */
