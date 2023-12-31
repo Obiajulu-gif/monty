@@ -1,50 +1,46 @@
 #include "monty.h"
+#include <stdio.h>
+
+bus_t bus = {NULL, NULL, NULL, 0};
+/**
+ * main - monty code interpreter
+ * @argc: number of arguments
+ * @argv: monty file location
+ * Return: 0 on success
+ */
 int main(int argc, char *argv[])
 {
+char *content;
+FILE *file;
+size_t size = 0;
+ssize_t read_line = 1;
 stack_t *stack = NULL;
-char *line = NULL, *token;
-size_t len = 0, i;
-unsigned int line_number = 1;
-FILE *fp;
-instruction_t opcodes[] = {
-{"pall", pall},
-{"push", push},
-{NULL, NULL}};
+unsigned int counter = 0;
 if (argc != 2)
 {
 fprintf(stderr, "USAGE: monty file\n");
-return (EXIT_FAILURE);
+exit(EXIT_FAILURE);
 }
-fp = fopen(argv[1], "r");
-if (fp == NULL)
+file = fopen(argv[1], "r");
+bus.file = file;
+if (!file)
 {
 fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-return (EXIT_FAILURE);
+exit(EXIT_FAILURE);
 }
-while (fgets(line, len, fp) != NULL)
+while (read_line > 0)
 {
-token = strtok(line, " \n\t\r");
-if (token == NULL || token[0] == '#')
+content = NULL;
+read_line = getline(&content, &size, file);
+bus.content = content;
+counter++;
+if (read_line > 0)
 {
-line_number++;
-continue;
+execute(content, &stack, counter, file);
 }
-for (i = 0; opcodes[i].opcode != NULL; i++)
-{
-if (strcmp(token, opcodes[i].opcode) == 0)
-{
-token = strtok(NULL, " \n\t\r");
-opcodes[i].f(&stack, token, line_number);
-break;
-}}
-if (opcodes[i].opcode == NULL)
-{
-fprintf(stderr, "L%u: unknown instruction %s\n", line_number, token);
-return (EXIT_FAILURE);
+free(content);
 }
-line_number++;
-}
-free(line);
-fclose(fp);
-return (EXIT_SUCCESS);
+free_stack(stack);
+fclose(file);
+return (0);
 }

@@ -1,11 +1,13 @@
 #ifndef MONTY_H
 #define MONTY_H
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
-
-#define STACK_SIZE 1000
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -22,6 +24,7 @@ typedef struct stack_s
     struct stack_s *prev;
     struct stack_s *next;
 } stack_t;
+
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
@@ -30,12 +33,38 @@ typedef struct stack_s
  * Description: opcode and its function
  * for stack, queues, LIFO, FIFO
  */
-typedef struct
+typedef struct instruction_s
 {
     char *opcode;
-    void (*f)(stack_t **, char *, unsigned int);
+    void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-void pall(stack_t **stack, char *arg, unsigned int line_number);
-void push(stack_t **stack, char *arg, unsigned int line_number);
-#endif /* MONTY_H */
+/**
+ * struct t_data - entry point
+ * @arg: value
+ * @file: pointer to monty file
+ * @content: line content
+ * @life_cycle: flag change stack <-> queue
+ */
+typedef struct bus_s
+{
+    char *arg;
+    FILE *file;
+    char *content;
+    int life_cycle;
+} bus_t;
+extern bus_t bus;
+
+void push_func(stack_t **stack, unsigned int line_num);
+void pall_func(stack_t **stack, unsigned int line_num);
+void free_stack(stack_t *head);
+void addnode(stack_t **head, int n);
+void addqueue(stack_t **head, int n);
+int execute(char *content, stack_t **stack, unsigned int counter, FILE *file);
+void pint_func(stack_t **stack, unsigned int line_num);
+void pop_func(stack_t **stack, unsigned int line_num);
+void swap_func(stack_t **stack, unsigned int line_num);
+void add_func(stack_t **stack, unsigned int line_num);
+void nop_func(stack_t **stack, unsigned int line_num);
+void sub_func(stack_t **stack, unsigned int line_num);
+#endif
